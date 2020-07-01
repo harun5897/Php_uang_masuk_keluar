@@ -1,0 +1,30 @@
+.scrollable {
+    height: 330px;
+    overflow-y: scroll;
+}
+
+.scrollable_user {
+    height: 443px;
+    overflow-y: scroll;
+}
+
+
+.tengah {
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 30PX; right: 0;
+    height: 300px;
+    border: none; /*jika ingin melihat posisi div anda lebih jelas */
+}
+
+.font {
+    font-family: candara;
+}
+body{
+    background-image: url(bg1.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+}
+.trans {
+    opacity: 0.8;
+}
