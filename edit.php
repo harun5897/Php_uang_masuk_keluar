@@ -1,5 +1,9 @@
 <?php
+    session_start();
     include_once("koneksi.php");
+
+    $id_sesion = $_SESSION['id'];
+
     if(isset($_GET['hal']))
     {
         //Pengujian jika edit data
@@ -50,8 +54,17 @@
     
                 WHERE id = '$_GET[id]'
             ");
-            header("location:index.php");
+            header("location:home.php");
         } 
+    } 
+
+    //FUNGSI UNTUK CHANGE PASSWORD
+    if(isset($_POST['b_pass']))
+    {
+        $pass = $_POST["password"];
+        mysqli_query($koneksi, "UPDATE tb_user SET password = '$_POST[password]' WHERE id = '$id_sesion' ");
+        
+        header("location:index.php");
     } 
 
 ?>
@@ -86,7 +99,7 @@
         
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <div class="mr-auto" style="width: 30%;">
-                <img src="logo.jpg" style="height: 70px; widht: 70px" alt="">
+                <a href="home.php"><img src="logo.jpg" style="height: 70px; widht: 70px" alt=""></a>
                 <a class="navbar-brand" href="#">PT. Calvindam Jaya EC</a>
             </div>
             <div class="mr-auto ml-auto text-center text-white" style="width: 40%;">
@@ -98,9 +111,9 @@
                     <i class="fas fa-user-cog"></i> Admin
                     </button>
                     <div class="dropdown-menu">
-                        <button class="dropdown-item" type="button"> <i class="fas fa-key"></i> Change Password</button>
-                        <button class="dropdown-item" type="button"> <i class="far fa-id-card"></i> List User</button>
-                        <button class="dropdown-item" type="button"> <i class="fas fa-power-off"> </i> Log Out</button>
+                        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#exampleModal2"> <i class="fas fa-key"></i> Change Password</button>
+                        <a href="user.php" class="dropdown-item"> <i class="far fa-id-card"></i> List User </a>
+                        <a href="logout.php" class="dropdown-item"> <i class="fas fa-power-off"></i> Log Out </a>
                     </div>
                 </div>
             </div>
@@ -137,7 +150,7 @@
                             <div class="form-group row">
                                 <label for="" class="col-sm-2 col-form-label">Jumlah</label>
                                 <div class="col-sm-10">
-                                <input type="" class="form-control" placeholder="Input Jumlah" name="t_jumlah" value="<?=@$v_jumlah?>">
+                                <input type="" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <=57" placeholder="Input Jumlah" name="t_jumlah" value="<?=@$v_jumlah?>">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -152,6 +165,33 @@
                         <button type="submit" name="b_edit" class="btn btn-success"> <i class="fas fa-save"></i> Simpan</button>
                         </form>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal GANTI PASSWORD -->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title" id="exampleModalLabel"> <i class="fas fa-key"></i> Change Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="">
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Password</label>
+                            <div class="col-sm-8">
+                            <input type="text" class="form-control" name="password" placeholder="Password baru anda">
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="b_pass" class="btn btn-warning"> <i class="fas fa-key"></i> Ok</button>
+                    </form>
                 </div>
             </div>
         </div>

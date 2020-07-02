@@ -28,3 +28,8 @@ body{
 .trans {
     opacity: 0.8;
 }
+
+.right {
+    position: absolute;
+    right: 0px;
+}

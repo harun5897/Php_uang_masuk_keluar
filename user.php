@@ -1,5 +1,12 @@
 <?php
+session_start();
+if($_SESSION['posisi']!=="admin"){
+    header("location:index.php?pesan=gagal");
+}
 include_once("koneksi.php");
+
+
+$id_sesion = $_SESSION['id'];
 
 if(isset($_POST['b_simpan']))
     {
@@ -31,6 +38,15 @@ if(isset($_POST['b_simpan']))
         }
     }
 
+    //FUNGSI UNTUK CHANGE PASSWORD
+    if(isset($_POST['b_pass']))
+    {
+        $pass = $_POST["password"];
+        mysqli_query($koneksi, "UPDATE tb_user SET password = '$_POST[password]' WHERE id = '$id_sesion' ");
+        
+        header("location:index.php");
+    } 
+
 
 
 ?>
@@ -58,15 +74,15 @@ if(isset($_POST['b_simpan']))
 
 <div class="">
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark" style="height: 80px;">
+    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark trans" style="height: 80px;">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <div class="mr-auto" style="width: 30%;">
-                <img src="logo.jpg" style="height: 70px; widht: 70px" alt="">
-                <a class="navbar-brand" href="#">PT. Calvindam Jaya EC</a>
+                <a href="home.php"><img src="logo.jpg" style="height: 70px; widht: 70px" alt=""></a>
+                <a class="navbar-brand" href="home.php">PT. Calvindam Jaya EC</a>
             </div>
             <div class="mr-auto ml-auto text-center text-white" style="width: 40%;">
                 <h3>~ SISTEM INFORMASI KEUANGAN ~</h3>
@@ -77,9 +93,9 @@ if(isset($_POST['b_simpan']))
                     <i class="fas fa-user-cog"></i> Admin
                     </button>
                     <div class="dropdown-menu">
-                        <button class="dropdown-item" type="button"> <i class="fas fa-key"></i> Change Password</button>
+                        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#exampleModal2"> <i class="fas fa-key"></i> Change Password</button>
                         <a href="user.php" class="dropdown-item"> <i class="far fa-id-card"></i> List User </a>
-                        <button class="dropdown-item" type="button"> <i class="fas fa-power-off"> </i> Log Out</button>
+                        <a href="logout.php" class="dropdown-item"> <i class="fas fa-power-off"></i> Log Out </a>
                     </div>
                 </div>
             </div>
@@ -97,10 +113,9 @@ if(isset($_POST['b_simpan']))
                     <div class="col">
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit" data-toggle="modal" data-target="#exampleModal"> <i class="fas fa-plus"></i> <strong> User </strong> </button>
                     </div>
-                    <div class="col-md-4">
-                        <form class="form-inline mb-2 ml-6">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit"> <i class="fas fa-search"></i> Search</button>
+                    <div class="col mb-5">
+                        <form class="form-inline ml-6 right">
+                        <input class="form-control is-valid mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="myInput">
                         </form>
                     </div>
                 </div>
@@ -115,7 +130,7 @@ if(isset($_POST['b_simpan']))
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="myTable">
                         <?php
                                 $no = 1;
                                 $tampil = mysqli_query($koneksi, "SELECT * from tb_user");
@@ -191,8 +206,48 @@ if(isset($_POST['b_simpan']))
             </div>
         </div>
     </div>
+
+    <!-- Modal GANTI PASSWORD -->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title" id="exampleModalLabel"> <i class="fas fa-key"></i> Change Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="">
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Password</label>
+                            <div class="col-sm-8">
+                            <input type="text" class="form-control" name="password" placeholder="Password baru anda">
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="b_pass" class="btn btn-warning"> <i class="fas fa-key"></i> Ok</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 <!-- Penutup DIV Awal -->
 </div>
 
 </body>
+
+<!-- FITUR FILTER KEYUP -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+});
+</script>
 </html>
