@@ -17,10 +17,11 @@ if(isset($_POST['b_simpan']))
             '$_POST[t_posisi]', 
             '$_POST[t_password]')
         "); 
-        header('Location: user.php');
 
         if($simpan) {
-            echo "berhasil";
+            ?>
+            <script> var simpan = true;</script>
+            <?php
         } else {
             echo "gagal";
         }
@@ -34,7 +35,9 @@ if(isset($_POST['b_simpan']))
         {
             //hapus data
             $hapus = mysqli_query($koneksi, "DELETE FROM tb_user WHERE id = '$_GET[id]' " );
-            header('Location: user.php');
+            ?>
+            <script> var hapus = true;</script>
+            <?php
         }
     }
 
@@ -44,7 +47,9 @@ if(isset($_POST['b_simpan']))
         $pass = $_POST["password"];
         mysqli_query($koneksi, "UPDATE tb_user SET password = '$_POST[password]' WHERE id = '$id_sesion' ");
         
-        header("location:index.php");
+        ?>
+        <script> var new_pass = true;</script>
+        <?php
     } 
 
 
@@ -68,6 +73,9 @@ if(isset($_POST['b_simpan']))
     <script type="text/javascript" src="js/bootstrap.min.js"> </script>
     <script type="text/javascript" src="js/bootstrap.js"> </script>
     <!--TUTUP STYLING CSS DAN JQUERY BOOTSTRAP  -->
+    
+    <!-- SWALL -->
+    <script src="alert/sweetalert2.all.min.js"></script>
 
 </head>
 <body>
@@ -249,5 +257,53 @@ $(document).ready(function(){
         });
     });
 });
+</script>
+
+<!-- ALERT SIMPAN -->
+<script>
+    if(simpan) {
+        Swal.fire({
+        icon: 'success',
+        title: 'Data Berhasil di Simpan !',
+        showConfirmButton: false,
+        timer: 1500
+});
+    setTimeout(function(){
+            window.location.href = 'user.php';
+        }, 1000);
+
+    }
+</script>
+
+<!-- ALERT HAPUS -->
+<script>
+    if(hapus) {
+        Swal.fire({
+        icon: 'success',
+        title: 'Data Berhasil di Hapus !',
+        showConfirmButton: false,
+        timer: 1500
+});
+    setTimeout(function(){
+            window.location.href = 'user.php';
+        }, 1000);
+
+    }
+</script>
+
+<!-- ALERT NEW PASSWORD -->
+<script>
+if(new_pass) {
+        Swal.fire({
+                icon: 'success',
+                text: 'Password Berhasil di Ganti !',
+                showConfirmButton: false,
+                timer: 1700
+            });
+            setTimeout(function(){
+            window.location.href = 'index.php';
+        }, 1000);
+
+    }
 </script>
 </html>

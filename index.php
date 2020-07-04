@@ -1,32 +1,11 @@
 <?php
+
 session_start();
 
 include_once("koneksi.php");
 
-    if(isset($_POST['login'])) {
-        $email = $_POST['email'];
-        $pass = $_POST['password'];
-        $data_user = mysqli_query($koneksi, "SELECT * FROM tb_user WHERE email = '$_POST[email]' AND password = '$_POST[password]'");
-        $akun = mysqli_fetch_array($data_user);
-
-        $email = $akun['email'];
-        $password = $akun['password'];
-        $level = $akun['posisi'];
-        $id = $akun['id'];
-
-        
-
-        if($email == $email && $pass == $password) {
-            $_SESSION['posisi'] = $level;
-            $_SESSION['id'] = $id;
-            header('location:home.php');
-        }else
-        {
-            echo " gagal login";
-        }
-
-    }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,6 +24,10 @@ include_once("koneksi.php");
     <script type="text/javascript" src="js/bootstrap.min.js"> </script>
     <script type="text/javascript" src="js/bootstrap.js"> </script>
     <!--TUTUP STYLING CSS DAN JQUERY BOOTSTRAP  -->
+
+    <!-- SWALL -->
+    <script src="alert/sweetalert2.all.min.js"></script>
+
 
 </head>
 <body>
@@ -84,4 +67,66 @@ include_once("koneksi.php");
     </div>
     
 </body>
+
+<?php 
+    if(isset($_POST['login'])) {
+        $email = $_POST['email'];
+        $pass = $_POST['password'];
+        $data_user = mysqli_query($koneksi, "SELECT * FROM tb_user WHERE email = '$_POST[email]' AND password = '$_POST[password]'");
+        $akun = mysqli_fetch_array($data_user);
+
+        $email = $akun['email'];
+        $password = $akun['password'];
+        $level = $akun['posisi'];
+        $id = $akun['id'];
+
+        
+
+        if($email == $email && $pass == $password) {
+
+            $_SESSION['posisi'] = $level;
+            $_SESSION['id'] = $id;
+
+            header('location:home.php?login=1');
+        }else
+        {
+            ?>
+                <script>var err = 1; </script>
+            <?php
+        }
+
+    }
+
+    if(isset ($_GET['cek'])) {
+        $cek = $_GET['cek'];
+        if($cek != 2) {
+            echo $_GET['cek'];
+        } else {
+            echo "<script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Logout !',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            setTimeout(function(){
+                window.location.href = 'index.php';
+            }, 1000);
+            </script>"; 
+        }
+    }
+
+?>
+<!-- ALERT GAGAL LOGIN -->
+<script>
+    if(err) {
+        Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Login',
+                    text: 'Periksa Password dan Email Anda!',
+                });
+        }
+</script>
+
+
 </html>

@@ -34,7 +34,9 @@ $id_sesion = $_SESSION['id'];
                 password = '$_POST[t_password]'
                 WHERE id = '$_GET[id]'
             ");
-            header("location:user.php");
+            ?>
+            <script> var edit = true;</script>
+            <?php
         } 
     }
 
@@ -43,8 +45,9 @@ $id_sesion = $_SESSION['id'];
     {
         $pass = $_POST["password"];
         mysqli_query($koneksi, "UPDATE tb_user SET password = '$_POST[password]' WHERE id = '$id_sesion' ");
-        
-        header("location:index.php");
+        ?>
+        <script> var new_pass = true;</script>
+        <?php
     } 
 
 ?>
@@ -65,6 +68,9 @@ $id_sesion = $_SESSION['id'];
     <script type="text/javascript" src="js/bootstrap.min.js"> </script>
     <script type="text/javascript" src="js/bootstrap.js"> </script>
     <!--TUTUP STYLING CSS DAN JQUERY BOOTSTRAP  -->
+
+    <!-- SWALL -->
+    <script src="alert/sweetalert2.all.min.js"></script>
 </head>
 <body>
 <div class="min-vh-100 bg-info">
@@ -174,3 +180,34 @@ $id_sesion = $_SESSION['id'];
 </div>
     
 </body>
+<script>
+    if(edit) {
+        Swal.fire({
+        icon: 'success',
+        title: 'Data Berhasil di Edit !',
+        showConfirmButton: false,
+        timer: 1500
+});
+    setTimeout(function(){
+            window.location.href = 'user.php';
+        }, 1000);
+
+    }
+</script>
+
+<!-- //ALERT NEW PASSWORD -->
+<script>
+if(new_pass) {
+        Swal.fire({
+                icon: 'success',
+                text: 'Password Berhasil di Ganti !',
+                showConfirmButton: false,
+                timer: 1700
+            });
+            setTimeout(function(){
+            window.location.href = 'index.php';
+        }, 1000);
+
+    }
+</script>
+</html>

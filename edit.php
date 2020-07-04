@@ -54,7 +54,9 @@
     
                 WHERE id = '$_GET[id]'
             ");
-            header("location:home.php");
+            ?>
+            <script> var edit = true;</script>
+            <?php
         } 
     } 
 
@@ -63,8 +65,9 @@
     {
         $pass = $_POST["password"];
         mysqli_query($koneksi, "UPDATE tb_user SET password = '$_POST[password]' WHERE id = '$id_sesion' ");
-        
-        header("location:index.php");
+        ?>
+        <script> var new_pass = true;</script>
+        <?php
     } 
 
 ?>
@@ -87,6 +90,9 @@
     <script type="text/javascript" src="js/bootstrap.js"> </script>
     <!--TUTUP STYLING CSS DAN JQUERY BOOTSTRAP  -->
 
+    <!-- SWALL -->
+    <script src="alert/sweetalert2.all.min.js"></script>
+
 </head>
 <body>
 
@@ -100,7 +106,7 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <div class="mr-auto" style="width: 30%;">
                 <a href="home.php"><img src="logo.jpg" style="height: 70px; widht: 70px" alt=""></a>
-                <a class="navbar-brand" href="#">PT. Calvindam Jaya EC</a>
+                <a class="navbar-brand" href="home.php">PT. Calvindam Jaya EC</a>
             </div>
             <div class="mr-auto ml-auto text-center text-white" style="width: 40%;">
                 <h3>~ SISTEM INFORMASI KEUANGAN ~</h3>
@@ -199,6 +205,37 @@
 
 <!-- Penutup DIV Awal -->
 </div>
-
 </body>
+
+//ALERT EDIT DATA
+<script>
+    if(edit) {
+        Swal.fire({
+        icon: 'success',
+        title: 'Data Berhasil di Edit !',
+        showConfirmButton: false,
+        timer: 1500
+});
+    setTimeout(function(){
+            window.location.href = 'home.php';
+        }, 1000);
+
+    }
+</script>
+
+<!-- //ALERT NEW PASSWORD -->
+<script>
+if(new_pass) {
+        Swal.fire({
+                icon: 'success',
+                text: 'Password Berhasil di Ganti !',
+                showConfirmButton: false,
+                timer: 1700
+            });
+            setTimeout(function(){
+            window.location.href = 'index.php';
+        }, 1000);
+
+    }
+</script>
 </html>

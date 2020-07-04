@@ -8,45 +8,57 @@
 
     $id_sesion = $_SESSION['id'];
 
-    //FUNGSI UNTUK SIMPAN
-    if(isset($_POST['b_simpan']))
-    {
-        
-        $data = mysqli_query($koneksi, "SELECT * FROM tb_saldo WHERE id = 1");
-        $arr = mysqli_fetch_array($data);
+if(isset($_GET['login'])){
+    ?>
+    <script> var login = true; </script>
+    <?php
+}    
 
-        $temp = $_POST['t_jumlah'];
-
-        if($_POST['t_status'] == 'masuk')
-        {
-            $saldo = $arr['saldo'] + $temp;
-        }
-        else {
-            $saldo = $arr['saldo'] - $temp;
-        }
-
-        mysqli_query($koneksi, "UPDATE tb_saldo SET 
-                saldo = '$saldo'
     
-                WHERE id = 1
-            ");
+    //FUNGSI UNTUK SIMPAN
+if(isset($_POST['b_simpan']))
+{
+    
+    $data = mysqli_query($koneksi, "SELECT * FROM tb_saldo WHERE id = 1");
+    $arr = mysqli_fetch_array($data);
 
-        //data akan di simpan baru
-        $simpan = mysqli_query($koneksi, "INSERT INTO tb_transaksi (tanggal, status, jumlah, keterangan) 
-            VALUES ('$_POST[t_tanggal]',
-                '$_POST[t_status]', 
-                '$_POST[t_jumlah]', 
-                '$_POST[t_keterangan]')
-            "); 
-        if ($simpan) {
-            header('Location: home.php?err=false');
-            $err = false;
-        }
-        else {
-            header('Location: home.php?err=true');
-            $err = true;
-        }
-    } 
+    $temp = $_POST['t_jumlah'];
+
+    if($_POST['t_status'] == 'masuk')
+    {
+        $saldo = $arr['saldo'] + $temp;
+    }
+    else {
+        $saldo = $arr['saldo'] - $temp;
+    }
+
+    mysqli_query($koneksi, "UPDATE tb_saldo SET 
+            saldo = '$saldo'
+
+            WHERE id = 1
+        ");
+
+    //data akan di simpan baru
+    $simpan = mysqli_query($koneksi, "INSERT INTO tb_transaksi (tanggal, status, jumlah, keterangan) 
+        VALUES ('$_POST[t_tanggal]',
+            '$_POST[t_status]', 
+            '$_POST[t_jumlah]', 
+            '$_POST[t_keterangan]')
+        "); 
+
+    if ($simpan) {
+        ?>
+        <script>
+            var simpan = "simpan";
+        </script>
+        <?php
+        
+    }
+    else {
+        header('Location: home.php?');
+
+    }
+} 
 
     //FUNGSI UNTUK FILTER DATA
     if(isset($_POST['b_filter']))
@@ -79,7 +91,9 @@
         $pass = $_POST["password"];
         mysqli_query($koneksi, "UPDATE tb_user SET password = '$_POST[password]' WHERE id = '$id_sesion' ");
         
-        header("location:index.php");
+        ?>
+        <script>var new_pass = true ;</script>
+        <?php
     } 
 
 
@@ -109,11 +123,14 @@
 
             //hapus data
             $hapus = mysqli_query($koneksi, "DELETE FROM tb_transaksi WHERE id = '$_GET[id]' " );
-            header('Location: home.php');
+            ?>
+            <script>var hapus = true; </script>
+            <?php
         }
     }
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -132,7 +149,8 @@
     <script type="text/javascript" src="js/bootstrap.js"> </script>
     <!--TUTUP STYLING CSS DAN JQUERY BOOTSTRAP  -->
 
-
+    <!-- SWALL -->
+    <script src="alert/sweetalert2.all.min.js"></script>
 </head>
 <body>
 
@@ -146,7 +164,7 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <div class="mr-auto" style="width: 30%;">
                 <a href="home.php"><img src="logo.jpg" style="height: 70px; widht: 70px" alt=""></a>
-                <a class="navbar-brand" href="home.php">PT. Calvindam Jaya EC</a>
+                <a class="navbar-brand" href="home.php?">PT. Calvindam Jaya EC</a>
             </div>
             <div class="mr-auto ml-auto text-center text-white" style="width: 40%;">
                 <h3>~ SISTEM INFORMASI KEUANGAN ~</h3>
@@ -178,11 +196,6 @@
         <div class="card" style="background-color: transparent; border-style : none;">
             <div class="card-body" >
                 <div class=" row align-items-center rounded" style="width: 103%; background-color: transparent; border-style : none;">
-                    <!-- <div class="bg-danger col rounded text-center" style="width: 20%; height: 50px"> -->
-                    <!-- button tambah -->
-                    <!-- <h1><i class="fas fa-sync fa-spin"></i></h1> -->
-                    <!-- </div>  -->
-
                     <div class="col" style="width: 20%">
                         <!-- informasi saldo -->
                         <div class="brounded-pill text-center text-white" style="width: 200px; height: 70px; margin-left: auto; margin-right: auto; margin-top: auto; margin-bottom: auto">
@@ -196,11 +209,6 @@
                             </div> 
                         </div>
                     </div>
-
-                    <!-- <div class="bg-danger col rounded text-center" style="width: 20%; height: 50px"> -->
-                    <!-- more menu -->
-                    <!-- <h1><i class="fas fa-sync fa-spin"></i></h1> -->
-                    <!-- </div> -->
                 </div>
             </div>
         </div>
@@ -344,7 +352,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal Filter Data -->
     <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -422,6 +429,7 @@
 
 <!-- FITUR FILTER KEYUP -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <script>
 $(document).ready(function(){
     $("#myInput").on("keyup", function() {
@@ -431,5 +439,74 @@ $(document).ready(function(){
         });
     });
 });
+
+
 </script>
+
+<!-- // ALERT SIMPAN DATA  -->
+<script>
+    if(simpan) {
+        Swal.fire({
+        icon: 'success',
+        title: 'Data Berhasil di Simpan !',
+        showConfirmButton: false,
+        timer: 1500
+});
+    setTimeout(function(){
+            window.location.href = 'home.php';
+        }, 1000);
+
+    }
+</script>
+
+<!-- // ALERT HAPUS DATA -->
+<script>
+    if(hapus) {
+        Swal.fire({
+        icon: 'success',
+        title: 'Data Berhasil di Hapus !',
+        showConfirmButton: false,
+        timer: 1500
+});
+    setTimeout(function(){
+            window.location.href = 'home.php';
+        }, 1000);
+
+    }
+</script>
+
+<!-- // ALERT LOGIN  -->
+<script>
+    if(login) {
+        Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Login !',
+                text: 'Selamat Datang di Website Kami !',
+                showConfirmButton: false,
+                timer: 1700
+            });
+            setTimeout(function(){
+            window.location.href = 'home.php';
+        }, 1000);
+
+    }
+</script>
+
+<!-- //ALERT GANTI PASSWORD -->
+<script>
+if(new_pass) {
+        Swal.fire({
+                icon: 'success',
+                text: 'Password Berhasil di Ganti !',
+                showConfirmButton: false,
+                timer: 1700
+            });
+            setTimeout(function(){
+            window.location.href = 'index.php';
+        }, 1000);
+
+    }
+</script>
+
+
 </html>
