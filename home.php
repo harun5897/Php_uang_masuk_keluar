@@ -172,7 +172,20 @@ if(isset($_POST['b_simpan']))
             <div class="ml-auto text-right" style="width: 30%;">
                 <div class="btn-group dropleft">
                     <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-user-cog"></i> Admin
+                    <i class="fas fa-user-cog"></i>  <?php
+                        if($_SESSION['posisi']=="manager"){
+                        ?> Manager
+                        <?php } 
+                        
+                        ?>
+
+                        <?php
+                        if($_SESSION['posisi']=="admin"){
+                        ?> Admin
+                        <?php } 
+                        
+                        ?>
+                        
                     </button>
                     <div class="dropdown-menu">
                         <button class="dropdown-item" type="button"  data-toggle="modal" data-target="#exampleModal2"> <i class="fas fa-key"></i> Change Password</button>
@@ -376,16 +389,6 @@ if(isset($_POST['b_simpan']))
                             <input type="date" class="form-control" name="tgl_2">
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Status</label>
-                            <div class="col-sm-8">
-                            <select class="custom-select" name="status">
-                                <option value="all">All</option>
-                                <option value="masuk">Masuk</option>
-                                <option value="keluar">Keluar</option>
-                            </select>
-                            </div>
-                        </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" name="b_filter" class="btn btn-success"> <i class="fas fa-filter"></i> Filter</button>
@@ -497,7 +500,7 @@ $(document).ready(function(){
 if(new_pass) {
         Swal.fire({
                 icon: 'success',
-                text: 'Password Berhasil di Ganti !',
+                title: 'Password Berhasil di Ganti !',
                 showConfirmButton: false,
                 timer: 1700
             });

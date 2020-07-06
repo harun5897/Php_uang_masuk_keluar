@@ -200,7 +200,7 @@ $id_sesion = $_SESSION['id'];
 if(new_pass) {
         Swal.fire({
                 icon: 'success',
-                text: 'Password Berhasil di Ganti !',
+                title: 'Password Berhasil di Ganti !',
                 showConfirmButton: false,
                 timer: 1700
             });

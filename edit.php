@@ -30,15 +30,24 @@
             $arr = mysqli_fetch_array($data);
     
             $temp = $_POST['t_jumlah'];
-    
-            if($_POST['t_status'] == 'masuk')
-            {
-                $saldo = $arr['saldo'] + $temp;
+
+            $data_kedua = mysqli_query($koneksi, "SELECT * FROM tb_transaksi WHERE id = '$_GET[id]'");
+            $arr_kedua = mysqli_fetch_array($data_kedua);
+
+            if($arr_kedua['status'] == 'masuk') {
+                if($_POST['t_status'] == 'masuk') {
+                    $saldo = $arr['saldo'];
+                } else {
+                    $saldo = $arr['saldo'] - $temp - $temp;
+                }
+            } else if ($arr_kedua['status'] == 'keluar') {
+                if($_POST['t_status'] == 'keluar') {
+                    $saldo = $arr['saldo'];
+                } else {
+                    $saldo = $arr['saldo'] + $temp + $temp;
+                }
             }
-            else {
-                $saldo = $arr['saldo'] - $temp;
-            }
-    
+            
             mysqli_query($koneksi, "UPDATE tb_saldo SET 
                     saldo = '$saldo'
         
@@ -207,7 +216,7 @@
 </div>
 </body>
 
-//ALERT EDIT DATA
+<!-- //ALERT EDIT DATA -->
 <script>
     if(edit) {
         Swal.fire({
@@ -228,7 +237,7 @@
 if(new_pass) {
         Swal.fire({
                 icon: 'success',
-                text: 'Password Berhasil di Ganti !',
+                title: 'Password Berhasil di Ganti !',
                 showConfirmButton: false,
                 timer: 1700
             });
